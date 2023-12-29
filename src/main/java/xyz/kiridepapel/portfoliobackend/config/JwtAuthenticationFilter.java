@@ -1,32 +1,30 @@
 package xyz.kiridepapel.portfoliobackend.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import xyz.kiridepapel.portfoliobackend.dto.ResponseDTO;
+import xyz.kiridepapel.portfoliobackend.exception.ExceptionConverter;
+import xyz.kiridepapel.portfoliobackend.exception.JwtExceptions.*;
+import xyz.kiridepapel.portfoliobackend.impl.JwtServiceImpl;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
-import xyz.kiridepapel.portfoliobackend.dto.ResponseDTO;
-import xyz.kiridepapel.portfoliobackend.exception.JwtExceptions.*;
-import xyz.kiridepapel.portfoliobackend.impl.JwtServiceImpl;
-import io.jsonwebtoken.io.IOException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import io.jsonwebtoken.io.IOException;
 
 @Component
-// @Log
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
@@ -38,86 +36,57 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException, java.io.IOException {
         try {
             final String username;
-            final String token = jwtService.getTokenFromRequest(request);
+            final String token = jwtServiceImpl.getTokenFromRequest(request);
+
             // Está iniciando sesión o registrándose
             if (token == null && isPublicUrl(request.getRequestURI())) {
                 filterChain.doFilter(request, response);
                 return;
             } else if (token == null) {
-                throw new NoTokenException();
+                throw new NoTokenException("No token provided");
             }
+
             // Token en blacklist
-            if (jwtService.isTokenBlacklisted(token)) {
-                throw new BlacklistedTokenException();
+            if (jwtServiceImpl.isTokenBlacklisted(token)) {
+                throw new BlacklistedTokenException("Token is blacklisted");
             }
-            username = jwtService.getUsernameFromToken(token);
+
+            username = jwtServiceImpl.getUsernameFromToken(token);
+
             // Validar si el usuario existe
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                if (jwtService.isTokenValid(token, userDetails)) {
+                // Validar si el token es válido
+                if (jwtServiceImpl.isTokenValid(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities());
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
             // Continuar con la cadena de filtros
             filterChain.doFilter(request, response);
-        } catch (NoTokenException e) {
-            saveAndShowInfoError(e, response,
-                    new ResponseDTO("Se necesita un token", HttpStatus.UNAUTHORIZED.value(), ResponseType.ERROR));
-        } catch (BlacklistedTokenException e) {
-            saveAndShowInfoError(e, response,
-                    new ResponseDTO("Es token fue inhabilitado", HttpStatus.UNAUTHORIZED.value(), ResponseType.ERROR));
-        } catch (SignatureException | MalformedJwtException e) {
-            saveAndShowInfoError(e, response,
-                    new ResponseDTO("El token es invalido", HttpStatus.UNAUTHORIZED.value(), ResponseType.ERROR));
-        } catch (ExpiredJwtException e) {
-            saveAndShowInfoError(e, response,
-                    new ResponseDTO("El token expiradó", HttpStatus.UNAUTHORIZED.value(), ResponseType.ERROR));
-        } catch (UsernameNotFoundException e) {
-            saveAndShowInfoError(e, response,
-                    new ResponseDTO("Datos inválidos", HttpStatus.UNAUTHORIZED.value(), ResponseType.ERROR));
-        } catch (Exception e) {
-            saveAndShowInfoError(e, response,
-                    new ResponseDTO("Ocurrió un error interno", HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                            ResponseType.ERROR));
+            
+        } catch (NoTokenException ex) {
+            ExceptionConverter.saveAndShowInfoError(ex, response, new ResponseDTO(ex.getMessage(), 401));
+        } catch (BlacklistedTokenException ex) {
+            ExceptionConverter.saveAndShowInfoError(ex, response, new ResponseDTO(ex.getMessage(), 401));
+        } catch (SignatureException | MalformedJwtException ex) {
+            ExceptionConverter.saveAndShowInfoError(ex, response, new ResponseDTO(ex.getMessage(), 401));
+        } catch (ExpiredJwtException ex) {
+            ExceptionConverter.saveAndShowInfoError(ex, response, new ResponseDTO(ex.getMessage(), 401));
+        } catch (UsernameNotFoundException ex) {
+            ExceptionConverter.saveAndShowInfoError(ex, response, new ResponseDTO(ex.getMessage(), 401));
+        } catch (Exception ex) {
+            ExceptionConverter.saveAndShowInfoError(ex, response, new ResponseDTO(ex.getMessage(), 500));
         }
-    }
-
-    // Guarda el error en el log, muestra el mensaje
-    private void saveAndShowInfoError(Exception e, HttpServletResponse response, ResponseDTO responseDTO)
-            throws IOException, java.io.IOException {
-        logger.error("Entrando al bloque Exception: " + e.getClass().getName());
-        logger.error("Causa exacta: " + e.getCause());
-        logger.error("Error detallado: ", e);
-        sendErrorResponseInJSON(response, responseDTO);
-    }
-
-    // Reemplazar por el Entry Point cuando se haga
-    private void sendErrorResponseInJSON(HttpServletResponse response, ResponseDTO responseDTO)
-            throws IOException, java.io.IOException {
-        response.setStatus(responseDTO.getStatusCode());
-        response.setContentType("application/json");
-        response.getWriter().write("{\"message\":\"" + responseDTO.getMessage() + "\",\"statusCode\":"
-                + responseDTO.getStatusCode() + ",\"type\":\"" + responseDTO.getType() + "\"}");
-        response.getWriter().flush();
     }
 
     // Si la url es pública, retorna true
     private boolean isPublicUrl(String url) {
-        return url.startsWith("/auth") ||
-                url.startsWith("/oauth") ||
-                url.startsWith("/login") ||
-                url.startsWith("/logout") ||
-                // Oauth2
-                url.startsWith("/error") ||
-                url.contains("/favicon.ico") ||
-                // Swagger
-                url.startsWith("/v3/api-docs") ||
-                url.startsWith("/doc/swagger-ui");
+        return url.startsWith("/api/auth");
     }
 
 }

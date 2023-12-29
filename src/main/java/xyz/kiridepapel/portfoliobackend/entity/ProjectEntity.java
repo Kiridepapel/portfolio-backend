@@ -20,12 +20,11 @@ public class ProjectEntity {
     private String repo;
     private String demo;
     private Boolean show;
-    private String img;
+    private String mainImg;
+    private Set<String> images;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<ImagesEntity> images;
-
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = ProjectEntity.class, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "project_tech", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "tech_id"))
-    private Set<TechEntity> techs;
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") 
+    private UserEntity user;
 }

@@ -1,5 +1,7 @@
 package xyz.kiridepapel.portfoliobackend.entity;
 
+import xyz.kiridepapel.portfoliobackend.entity.enums.RoleEnum;
+
 import java.util.Set;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,8 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import xyz.kiridepapel.portfoliobackend.entity.enums.RoleEnum;
 
 @Entity
 @Builder
@@ -38,17 +38,18 @@ public class UserEntity implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private PersonalInfoEntity personalInfo;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ExperienceEntity> experiences;
-
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = TechEntity.class, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "user_tech", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "tech_id"))
-    private Set<TechEntity> techs;
-
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = ProjectEntity.class, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "user_project", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
+    
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ProjectEntity> projects;
+    
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<SkillEntity> skills;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<TechEntity> techs;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

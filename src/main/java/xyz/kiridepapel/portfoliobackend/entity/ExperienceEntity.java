@@ -25,6 +25,6 @@ public class ExperienceEntity {
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = true, name = "user_id")
+    @JoinColumn(name = "user_id") 
     private UserEntity user;
 }

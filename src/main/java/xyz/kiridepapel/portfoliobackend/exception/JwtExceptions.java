@@ -2,39 +2,39 @@ package xyz.kiridepapel.portfoliobackend.exception;
 
 public class JwtExceptions {
 
-    public static class UsernameNotFoundException extends RuntimeException {
-        public UsernameNotFoundException() {
-            super("Username not found");
-        }
-    }
-
     public static class NoTokenException extends RuntimeException {
-        public NoTokenException() {
-            super("No token provided");
+        public NoTokenException(String message) {
+            super(message);
         }
     }
 
     public static class BlacklistedTokenException extends RuntimeException {
-        public BlacklistedTokenException() {
-            super("Token is blacklisted");
-        }
-    }
-
-    public static class ExpiredTokenException extends RuntimeException {
-        public ExpiredTokenException() {
-            super("Token has expired");
-        }
-    }
-
-    public static class MalformedTokenException extends RuntimeException {
-        public MalformedTokenException() {
-            super("Token is malformed");
+        public BlacklistedTokenException(String message) {
+            super(message);
         }
     }
 
     public static class SignatureTokenException extends RuntimeException {
-        public SignatureTokenException() {
-            super("Token signature is invalid");
+        public SignatureTokenException(String message) {
+            super(message);
+        }
+    }
+
+    public static class MalformedTokenException extends RuntimeException {
+        public MalformedTokenException(String message) {
+            super(message);
+        }
+    }
+
+    public static class ExpiredTokenException extends RuntimeException {
+        public ExpiredTokenException(String message) {
+            super(message);
+        }
+    }
+
+    public static class UsernameNotFoundException extends RuntimeException {
+        public UsernameNotFoundException(String message) {
+            super(message);
         }
     }
 }

@@ -23,10 +23,13 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class JwtServiceImpl {
+    
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;
+
     @Value("${jwt.time.expiration}")
     private String TIME_EXPIRATION;
+
     private Set<String> memoryBackendBlacklistedTokens = new HashSet<>();
 
     // Obtener el token de una solicitud HTTP

@@ -7,16 +7,19 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "images")
-public class ImagesEntity {
+@Table(name = "skill")
+public class SkillEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
     private String img;
+    private Boolean show;
+    private String category;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = true, name = "project_id")
-    private ProjectEntity project;
+    @JoinColumn(name = "user_id") 
+    private UserEntity user;
 }

@@ -7,7 +7,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tech")
+@Table(name = "technology")
 public class TechEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +16,10 @@ public class TechEntity {
     private String name;
     private String img;
     private Boolean show;
+    private String category;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = true, name = "category_id")
-    private TechCategoryEntity category;
+    @JoinColumn(name = "user_id") 
+    private UserEntity user;
 }

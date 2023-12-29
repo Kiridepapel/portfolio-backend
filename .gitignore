@@ -4,8 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-/docker-compose.yml
-/src/main/resources/application.yaml
+# My
+src/main/resources/application.yaml
 
 ### STS ###
 .apt_generated
