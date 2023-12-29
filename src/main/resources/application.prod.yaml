@@ -1,6 +1,3 @@
-app:
-  production: false
-
 spring:
   datasource:
     url: jdbc:postgresql://postgresdb:5432/${POSTGRES_DB}
@@ -17,6 +14,9 @@ spring:
     properties:
       hibernate:
         format-sql: true
+
+app:
+  production: false
 
 jwt:
   secret:
