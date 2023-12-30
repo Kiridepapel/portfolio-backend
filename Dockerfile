@@ -14,6 +14,9 @@ FROM openjdk:17-jdk-slim
 # Copiar el JAR de la etapa de construcción
 COPY --from=build target/portfolio-backend-0.0.1-SNAPSHOT.jar /app.jar
 
+# Copiar el archivo de configuración
+COPY src/main/resources/application.prod.yaml src/main/resources/application.yaml
+
 # Exponer el puerto
 EXPOSE 8080
 
