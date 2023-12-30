@@ -15,15 +15,6 @@ spring:
       hibernate:
         format-sql: true
 
-app:
-  production: false
-
-jwt:
-  secret:
-    key: 81db10483eac754b379a518496151643a777SAD78A434AS22162d6811d11f303ef
-  time:
-    expiration: 86400000
-
 logging:
   level:
     org:

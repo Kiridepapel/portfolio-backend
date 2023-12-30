@@ -24,10 +24,10 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class JwtServiceImpl {
     
-    @Value("${jwt.secret.key}")
+    @Value("${JWT_SECRET_KEY}")
     private String SECRET_KEY;
 
-    @Value("${jwt.time.expiration}")
+    @Value("${JWT_TIME_EXPIRATION}")
     private String TIME_EXPIRATION;
 
     private Set<String> memoryBackendBlacklistedTokens = new HashSet<>();
@@ -41,7 +41,7 @@ public class JwtServiceImpl {
             return null;
         }
     }
-
+    
     // Generar un Token JWT en los datos de un usuario
     public String genToken(UserDetails user) {
         Map<String, Object> extraClaims = new HashMap<>();
