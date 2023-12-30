@@ -33,7 +33,7 @@ public class AuthController {
 
   @GetMapping("/test")
   public ResponseEntity<?> test() {
-    return new ResponseEntity<>("Hello World!" + jwtSecretKey + " - " + jwtTimeExpiration, HttpStatus.OK);
+    return new ResponseEntity<>("Hello World!: " + jwtSecretKey + " - " + jwtTimeExpiration, HttpStatus.OK);
   }
 
   @PostMapping("/login")
