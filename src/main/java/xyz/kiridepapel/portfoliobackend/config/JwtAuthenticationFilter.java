@@ -90,7 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // Si la url es pública, retorna true
     private boolean isPublicUrl(String url) {
-        return url.startsWith("/api/auth") ||
+        return url.startsWith("/api/v1/auth") ||
                 url.startsWith("/error") ||
                 url.contains("/favicon.");
         // Swagger

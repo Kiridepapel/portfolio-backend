@@ -17,7 +17,7 @@ import xyz.kiridepapel.portfoliobackend.impl.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "**")
 public class AuthController {
 

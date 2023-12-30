@@ -24,6 +24,7 @@ services:
       # Perfil de Spring
       SPRING_PROFILES_ACTIVE: prod
       # Variables de entorno
+      # JWT
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       JWT_TIME_EXPIRATION: ${JWT_TIME_EXPIRATION}
     depends_on:

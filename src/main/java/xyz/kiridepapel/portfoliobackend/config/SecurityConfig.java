@@ -47,7 +47,7 @@ public class SecurityConfig {
                     return configuration;
                 }))
                 .authorizeHttpRequests(authRequest -> {
-                    authRequest.requestMatchers("/api/auth/**").permitAll();
+                    authRequest.requestMatchers("/api/v1/auth/**").permitAll();
                     authRequest.requestMatchers("/favicon.ico").permitAll();
                     authRequest.anyRequest().authenticated();
                 })
