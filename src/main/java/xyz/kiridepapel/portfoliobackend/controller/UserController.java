@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = { "https://kiridepapel.vercel.app", "http://localhost:4200" })
+@CrossOrigin(origins = "**")
 public class UserController {
 
   @GetMapping("/test")

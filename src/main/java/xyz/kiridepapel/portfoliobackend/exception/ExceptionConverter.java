@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import xyz.kiridepapel.portfoliobackend.dto.ResponseDTO;
 
 public class ExceptionConverter {
+    
     private static final Logger logger = LoggerFactory.getLogger(ExceptionConverter.class);
 
     // Guarda el error en el log, muestra el mensaje

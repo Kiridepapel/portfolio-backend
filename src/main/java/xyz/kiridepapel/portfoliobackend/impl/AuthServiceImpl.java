@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import xyz.kiridepapel.portfoliobackend.dto.AuthResponseDTO;
 import xyz.kiridepapel.portfoliobackend.dto.LoginRequestDTO;
 import xyz.kiridepapel.portfoliobackend.dto.RegisterRequestDTO;
@@ -15,18 +16,12 @@ import xyz.kiridepapel.portfoliobackend.entity.enums.RoleEnum;
 import xyz.kiridepapel.portfoliobackend.repository.UserRepository;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl {
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    
-    @Autowired
-    private UserRepository userRepository;
-    
-    @Autowired
-    private JwtServiceImpl jwtServiceImpl;
-    
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final JwtServiceImpl jwtServiceImpl;
+    private final PasswordEncoder passwordEncoder;
     
     public AuthResponseDTO login(LoginRequestDTO request){
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));

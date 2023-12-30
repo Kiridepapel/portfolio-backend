@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import xyz.kiridepapel.portfoliobackend.dto.AuthResponseDTO;
 import xyz.kiridepapel.portfoliobackend.dto.LoginRequestDTO;
 import xyz.kiridepapel.portfoliobackend.dto.RegisterRequestDTO;
@@ -17,11 +18,11 @@ import xyz.kiridepapel.portfoliobackend.impl.AuthServiceImpl;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = { "https://kiridepapel.vercel.app", "http://localhost:4200" })
+@CrossOrigin(origins = "**")
+@RequiredArgsConstructor
 public class AuthController {
-
-  @Autowired
-  private AuthServiceImpl authServiceImpl;
+  
+  private final AuthServiceImpl authServiceImpl;
 
   @GetMapping("/test")
   public ResponseEntity<?> test() {
