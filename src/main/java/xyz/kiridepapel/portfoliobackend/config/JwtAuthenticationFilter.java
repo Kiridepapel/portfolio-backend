@@ -5,6 +5,7 @@ import xyz.kiridepapel.portfoliobackend.exception.ExceptionConverter;
 import xyz.kiridepapel.portfoliobackend.exception.JwtExceptions.*;
 import xyz.kiridepapel.portfoliobackend.impl.JwtServiceImpl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,14 +25,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import lombok.RequiredArgsConstructor;
-
 @Component
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
-    private final UserDetailsService userDetailsService;
-    private final JwtServiceImpl jwtServiceImpl;
+    @Autowired
+    private UserDetailsService userDetailsService;
+    
+    @Autowired
+    private JwtServiceImpl jwtServiceImpl;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

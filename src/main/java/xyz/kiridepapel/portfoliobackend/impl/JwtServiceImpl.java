@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,10 +23,12 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class JwtServiceImpl {
-    
-    // De momento
-    private String SECRET_KEY = "81db10483eac754b379a518496151643a777SAD78A434AS22162d6811d11f303ef";
-    private String TIME_EXPIRATION = "86400000";
+
+    @Value("${JWT_SECRET_KEY}")
+    private String jwtSecretKey;
+
+    @Value("${JWT_TIME_EXPIRATION}")
+    private String jwtTimeExpiration;
 
     private Set<String> memoryBackendBlacklistedTokens = new HashSet<>();
 
@@ -38,7 +41,7 @@ public class JwtServiceImpl {
             return null;
         }
     }
-    
+
     // Generar un Token JWT en los datos de un usuario
     public String genToken(UserDetails user) {
         Map<String, Object> extraClaims = new HashMap<>();
@@ -52,14 +55,14 @@ public class JwtServiceImpl {
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(TIME_EXPIRATION)))
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(jwtTimeExpiration)))
                 .signWith(genTokenSign(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     // Firmar el Token con una clave privada
     private Key genTokenSign() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

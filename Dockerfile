@@ -11,10 +11,6 @@ RUN mvn -X -f pom.xml clean package -DskipTests
 # Etapa de ejecución
 FROM openjdk:17-jdk-slim
 
-# Variables de entorno
-ENV JWT_SECRET_KEY=${JWT_SECRET_KEY}
-ENV JWT_TIME_EXPIRATION=${JWT_TIME_EXPIRATION} 
-
 # Copiar el JAR de la etapa de construcción
 COPY --from=build target/portfolio-backend-0.0.1-SNAPSHOT.jar /app.jar
 

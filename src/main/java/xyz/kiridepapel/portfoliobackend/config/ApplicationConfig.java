@@ -1,5 +1,6 @@
 package xyz.kiridepapel.portfoliobackend.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,14 +12,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import lombok.RequiredArgsConstructor;
 import xyz.kiridepapel.portfoliobackend.repository.UserRepository;
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
     
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
     
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

@@ -2,6 +2,7 @@ package xyz.kiridepapel.portfoliobackend.config;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,18 +16,18 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import lombok.RequiredArgsConstructor;
-
 @Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-@RequiredArgsConstructor
 public class SecurityConfig {
     
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider authProvider;
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
     
-    private static final String[] ALLOWED_ORIGINS = { "https://kiridepapel.vercel.app" };
+    @Autowired
+    private AuthenticationProvider authProvider;
+    
+    private static final String[] ALLOWED_ORIGINS = { "https://kiridepapel.vercel.app", "http://localhost:4200" };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
