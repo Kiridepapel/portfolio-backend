@@ -37,17 +37,18 @@ public class SecurityConfig {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(Arrays.asList(ALLOWED_ORIGINS));
                     configuration.setAllowedMethods(Arrays.asList(
-                            HttpMethod.GET.name(),
-                            HttpMethod.POST.name(),
-                            HttpMethod.PUT.name(),
-                            HttpMethod.DELETE.name(),
-                            HttpMethod.PATCH.name(),
-                            HttpMethod.OPTIONS.name()));
+                        HttpMethod.GET.name(),
+                        HttpMethod.POST.name(),
+                        HttpMethod.PUT.name(),
+                        HttpMethod.DELETE.name(),
+                        HttpMethod.PATCH.name(),
+                        HttpMethod.OPTIONS.name()));
                     configuration.setAllowedHeaders(Arrays.asList("*"));
                     return configuration;
                 }))
                 .authorizeHttpRequests(authRequest -> {
                     authRequest.requestMatchers("/api/auth/**").permitAll();
+                    authRequest.requestMatchers("/favicon.ico").permitAll();
                     authRequest.anyRequest().authenticated();
                 })
                 .authenticationProvider(authProvider)

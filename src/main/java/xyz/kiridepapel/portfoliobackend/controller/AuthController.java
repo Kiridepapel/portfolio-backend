@@ -21,21 +21,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 @CrossOrigin(origins = "**")
 public class AuthController {
 
-  @Autowired
-  private AuthServiceImpl authServiceImpl;
+    @Autowired
+    private AuthServiceImpl authServiceImpl;
 
-  @GetMapping("/test")
-  public ResponseEntity<?> test() {
-    return new ResponseEntity<>("Hello World!", HttpStatus.OK);
-  }
+    @GetMapping("/test")
+    public ResponseEntity<?> test() {
+        return new ResponseEntity<>("Hello World!", HttpStatus.OK);
+    }
 
-  @PostMapping("/login")
-  public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO requestDTO) {
-    return new ResponseEntity<AuthResponseDTO>(authServiceImpl.login(requestDTO), HttpStatus.OK);
-  }
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO requestDTO) {
+        return new ResponseEntity<AuthResponseDTO>(authServiceImpl.login(requestDTO), HttpStatus.OK);
+    }
 
-  @PostMapping("/register")
-  public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO requestDTO) {
-    return new ResponseEntity<AuthResponseDTO>(authServiceImpl.register(requestDTO), HttpStatus.OK);
-  }
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO requestDTO) {
+        return new ResponseEntity<AuthResponseDTO>(authServiceImpl.register(requestDTO), HttpStatus.OK);
+    }
 }

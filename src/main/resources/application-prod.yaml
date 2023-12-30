@@ -15,16 +15,5 @@ spring:
       hibernate:
         format-sql: true
 
-logging:
-  level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
-      springframework:
-        security: TRACE
-
 server:
   port: 8080

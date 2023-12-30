@@ -27,10 +27,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    
+
     @Autowired
     private UserDetailsService userDetailsService;
-    
+
     @Autowired
     private JwtServiceImpl jwtServiceImpl;
 
@@ -41,12 +41,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String username;
             final String token = jwtServiceImpl.getTokenFromRequest(request);
 
-            // Está iniciando sesión o registrándose
-            if (token == null && isPublicUrl(request.getRequestURI())) {
-                filterChain.doFilter(request, response);
-                return;
-            } else if (token == null) {
-                throw new NoTokenException("No token provided");
+            if (token == null) {
+                if (isPublicUrl(request.getRequestURI())) {
+                    filterChain.doFilter(request, response);
+                    return;
+                } else {
+                    throw new NoTokenException("No token provided");
+                }
             }
 
             // Token en blacklist
@@ -62,16 +63,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // Validar si el token es válido
                 if (jwtServiceImpl.isTokenValid(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities());
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
             // Continuar con la cadena de filtros
             filterChain.doFilter(request, response);
-            
+
         } catch (NoTokenException ex) {
             ExceptionConverter.saveAndShowInfoError(ex, response, new ResponseDTO(ex.getMessage(), 401));
         } catch (BlacklistedTokenException ex) {
@@ -89,7 +90,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // Si la url es pública, retorna true
     private boolean isPublicUrl(String url) {
-        return url.startsWith("/api/auth");
+        return url.startsWith("/api/auth") ||
+                url.startsWith("/error") ||
+                url.contains("/favicon.");
+        // Swagger
+        // url.startsWith("/v3/api-docs") ||
+        // url.startsWith("/doc/swagger-ui");
     }
 
 }

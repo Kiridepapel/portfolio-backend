@@ -86,8 +86,7 @@ public class JwtServiceImpl {
         return memoryBackendBlacklistedTokens.contains(token);
     }
 
-    // Obtener la información del Token JWT (información que se puede obtener sin la
-    // clave privada)
+    // Obtener la información del Token JWT (información que se puede obtener sin la clave privada
     private Claims getAllClaims(String token) {
         return Jwts
                 .parserBuilder()
