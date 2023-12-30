@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -24,11 +23,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class JwtServiceImpl {
     
-    @Value("${JWT_SECRET_KEY}")
-    private String SECRET_KEY;
-
-    @Value("${JWT_TIME_EXPIRATION}")
-    private String TIME_EXPIRATION;
+    // De momento
+    private String SECRET_KEY = "81db10483eac754b379a518496151643a777SAD78A434AS22162d6811d11f303ef";
+    private String TIME_EXPIRATION = "86400000";
 
     private Set<String> memoryBackendBlacklistedTokens = new HashSet<>();
 

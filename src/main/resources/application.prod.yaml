@@ -15,6 +15,9 @@ spring:
       hibernate:
         format-sql: true
 
+JWT_SECRET_KEY: 81db10483eac754b379a518496151643a777SAD78A434AS22162d6811d11f303ef
+JWT_TIME_EXPIRATION: 86400000
+
 logging:
   level:
     org:

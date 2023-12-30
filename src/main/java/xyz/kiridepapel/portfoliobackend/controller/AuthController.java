@@ -1,6 +1,5 @@
 package xyz.kiridepapel.portfoliobackend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,17 +15,25 @@ import xyz.kiridepapel.portfoliobackend.dto.LoginRequestDTO;
 import xyz.kiridepapel.portfoliobackend.dto.RegisterRequestDTO;
 import xyz.kiridepapel.portfoliobackend.impl.AuthServiceImpl;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "**")
 @RequiredArgsConstructor
 public class AuthController {
-  
+
   private final AuthServiceImpl authServiceImpl;
+
+  @Value("${JWT_SECRET_KEY}")
+  private String jwtSecretKey;
+
+  @Value("${JWT_TIME_EXPIRATION}")
+  private String jwtTimeExpiration;
 
   @GetMapping("/test")
   public ResponseEntity<?> test() {
-    return new ResponseEntity<>("Hello World!", HttpStatus.OK);
+    return new ResponseEntity<>("Hello World!" + jwtSecretKey + " - " + jwtTimeExpiration, HttpStatus.OK);
   }
 
   @PostMapping("/login")
