@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import xyz.kiridepapel.portfoliobackend.config.AppProperties;
+// import xyz.kiridepapel.portfoliobackend.config.AppProperties;
 import xyz.kiridepapel.portfoliobackend.dto.AuthResponseDTO;
 import xyz.kiridepapel.portfoliobackend.dto.LoginRequestDTO;
 import xyz.kiridepapel.portfoliobackend.dto.RegisterRequestDTO;
 import xyz.kiridepapel.portfoliobackend.impl.AuthServiceImpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,12 +26,12 @@ public class AuthController {
 
   private final AuthServiceImpl authServiceImpl;
 
-  @Autowired
-  private AppProperties appProperties;
+  // @Autowired
+  // private AppProperties appProperties;
 
   @GetMapping("/test")
   public ResponseEntity<?> test() {
-    return new ResponseEntity<>("Hello World!" + appProperties.getJwtSecretKey() + " - " + appProperties.getJwtTimeExpiration(), HttpStatus.OK);
+    return new ResponseEntity<>("Hello World!" + System.getenv("JWT_SECRET_KEY") + " - " + System.getenv("JWT_TIME_EXPIRATION"), HttpStatus.OK);
   }
 
   @PostMapping("/login")
