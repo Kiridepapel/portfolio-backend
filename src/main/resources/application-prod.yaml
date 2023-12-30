@@ -15,9 +15,8 @@ spring:
       hibernate:
         format-sql: true
 
-app:
-  jwt-secret-key: ${JWT_SECRET_KEY}
-  jwt-time-expiration: ${JWT_TIME_EXPIRATION}
+JWT_SECRET_KEY: {{JWT_SECRET_KEY}}
+JWT_TIME_EXPIRATION: {{JWT_TIME_EXPIRATION}}
 
 logging:
   level:
