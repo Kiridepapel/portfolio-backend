@@ -12,7 +12,7 @@ public class ResendDTO {
     public static class ResendRequestDTO {
         private String title;
         private String email;
-        private String body;
+        private String message;
         private Boolean sendMeCopy;
     }
 }

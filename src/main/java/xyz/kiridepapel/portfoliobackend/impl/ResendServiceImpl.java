@@ -30,7 +30,7 @@ public class ResendServiceImpl {
     private String RESEND_SECRET_KEY;
 
     @Value("${APP_PRODUCTION}")
-    public String APP_PRODUCTION;
+    private String APP_PRODUCTION;
 
     @Autowired
     private LogEmailRepository logEmailRepository;
@@ -69,7 +69,7 @@ public class ResendServiceImpl {
         if (rq.getEmail() == null || rq.getEmail().isEmpty()) {
             throw new FailSendEmail("Email is required!");
         }
-        if (rq.getBody() == null || rq.getBody().isEmpty()) {
+        if (rq.getMessage() == null || rq.getMessage().isEmpty()) {
             throw new FailSendEmail("Body is required!");
         }
         if (rq.getSendMeCopy() == null) {
@@ -105,7 +105,7 @@ public class ResendServiceImpl {
                     "</p>" +
                 "</div>" +
                 "<div style='padding: 50px 20%; background: #ebebeb; border-radius: 10px; text-align: center;'>" +
-                    "<span style='color: #343434; font-size: 14px;'>" + rq.getBody() + "</span>" +
+                    "<span style='color: #343434; font-size: 14px;'>" + rq.getMessage() + "</span>" +
                 "</div>"
             )
             .build();
@@ -135,7 +135,7 @@ public class ResendServiceImpl {
         LogEmailEntity logEmailEntity = LogEmailEntity.builder()
             .title(rq.getTitle())
             .email(rq.getEmail())
-            .body(rq.getBody())
+            .message(rq.getMessage())
             .sendMeCopy(rq.getSendMeCopy())
             .createdAt(now)
             .responseId(id)

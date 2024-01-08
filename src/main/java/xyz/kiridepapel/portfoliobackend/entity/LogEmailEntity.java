@@ -18,7 +18,7 @@ public class LogEmailEntity {
     
     private String title;
     private String email;
-    private String body;
+    private String message;
     private Boolean sendMeCopy;
     private Timestamp createdAt;
     private String responseId;
