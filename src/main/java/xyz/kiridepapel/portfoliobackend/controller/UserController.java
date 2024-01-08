@@ -23,7 +23,7 @@ public class UserController {
 
   @GetMapping("/test")
   public ResponseEntity<ResponseDTO> test() {
-      return new ResponseEntity<ResponseDTO>(new ResponseDTO("Hello World! " + resendServiceImpl.getClientIp(), 200), HttpStatus.OK);
+      return new ResponseEntity<ResponseDTO>(new ResponseDTO("Hello World!", 200), HttpStatus.OK);
   }
 
   @GetMapping("/send-email")

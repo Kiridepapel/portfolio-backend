@@ -14,8 +14,5 @@ public class ResendDTO {
         private String email;
         private String body;
         private Boolean sendMeCopy;
-        
-        private String ip;
-        private String cityName;
     }
 }

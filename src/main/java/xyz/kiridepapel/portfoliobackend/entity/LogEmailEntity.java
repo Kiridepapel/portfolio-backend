@@ -24,5 +24,4 @@ public class LogEmailEntity {
     private String responseId;
 
     private String ip;
-    private String cityName;
 }

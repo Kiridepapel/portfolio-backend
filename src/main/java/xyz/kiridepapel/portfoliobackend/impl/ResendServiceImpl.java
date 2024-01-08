@@ -1,6 +1,7 @@
 package xyz.kiridepapel.portfoliobackend.impl;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +37,19 @@ public class ResendServiceImpl {
 
     public ResponseDTO sendEmail(ResendRequestDTO rq) {
         Resend resend = new Resend(RESEND_SECRET_KEY);
+        String ip = getClientIp();
 
         validateData(rq);
-        if(cantSendMoreMails(rq)) {
-            throw new FailSendEmail("You can't send more than 3 emails per day!");
+
+        if(!canSendMoreMails(ip)) {
+            throw new FailSendEmail("You can't send more than 2 emails per day!");
         };
 
         CreateEmailOptions params = createEmail(rq);
 
         try {
             CreateEmailResponse data = resend.emails().send(params);
-            saveLogEmail(rq, data);
+            saveLogEmail(rq, ip, data.getId());
             return new ResponseDTO("Email sent successfully!", 200);
         } catch (ResendException e) {
             e.printStackTrace();
@@ -76,7 +79,8 @@ public class ResendServiceImpl {
             emailsTo.add(rq.getEmail());
         }
 
-        LocalDateTime now = LocalDateTime.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         return CreateEmailOptions.builder()
             .to(emailsTo)
@@ -88,35 +92,34 @@ public class ResendServiceImpl {
                         "<span style='color: #343434'>" + rq.getEmail() + "</span>" +
                     "</p>" +
                     "<p style='color: #6200ff; font-size: 14px; width: 50%; display: inline-block; text-align: center;'>Date: " +
-                        "<span style='color: #343434'>" + Timestamp.valueOf(now) + "</span>" +
+                        "<span style='color: #343434'>" + dateFormat.format(now) + "</span>" +
                     "</p>" +
                 "</div>" +
-                "<div style='padding: 50px 20%; background: #ebebeb; border-radius: 10px;'>" +
+                "<div style='padding: 50px 20%; background: #ebebeb; border-radius: 10px; text-align: center;'>" +
                     "<span style='color: #343434; font-size: 14px;'>" + rq.getBody() + "</span>" +
                 "</div>"
             )
             .build();
     }
 
-    private boolean cantSendMoreMails(ResendRequestDTO rq) {
-        Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().truncatedTo(java.time.temporal.ChronoUnit.DAYS).minusDays(1));
-        Timestamp now = Timestamp.valueOf(LocalDateTime.now().truncatedTo(java.time.temporal.ChronoUnit.DAYS));
+    private boolean canSendMoreMails(String ip) {
+        Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
-        List<LogEmailEntity> logEmails = logEmailRepository.findByIpAndCreatedAtBetween(rq.getIp(), yesterday, now);
+        Long quantity = logEmailRepository.countEmailsByIpBetweenDates(ip, yesterday, now);
 
-        return logEmails.size() >= 3;
+        return !(quantity >= 2);
     }
 
-    private void saveLogEmail(ResendRequestDTO rq, CreateEmailResponse data) {
+    private void saveLogEmail(ResendRequestDTO rq, String ip, String id) {
         LogEmailEntity logEmailEntity = LogEmailEntity.builder()
             .title(rq.getTitle())
             .email(rq.getEmail())
             .body(rq.getBody())
             .sendMeCopy(rq.getSendMeCopy())
             .createdAt(Timestamp.valueOf(LocalDateTime.now()))
-            .responseId(data.getId())
-            .ip(rq.getIp())
-            .cityName(rq.getCityName())
+            .responseId(id)
+            .ip(ip)
             .build();
 
         logEmailRepository.save(logEmailEntity);
@@ -136,6 +139,10 @@ public class ResendServiceImpl {
         
         if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getRemoteAddr();
+        }
+
+        if (ipAddress != null && ipAddress.contains(",")) {
+            ipAddress = ipAddress.split(",")[0].trim();
         }
 
         return ipAddress;
