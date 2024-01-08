@@ -1,5 +1,8 @@
 package xyz.kiridepapel.portfoliobackend.controller;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +26,10 @@ public class UserController {
 
   @GetMapping("/test")
   public ResponseEntity<ResponseDTO> test() {
-      return new ResponseEntity<ResponseDTO>(new ResponseDTO("Hello World!", 200), HttpStatus.OK);
+      Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+      Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+      return new ResponseEntity<ResponseDTO>(new ResponseDTO("Can send more emails: " + resendServiceImpl.canSendMoreMails(resendServiceImpl.getClientIp()) +
+      " (yesterday: " + yesterday + ", now: " + now + ")", 200), HttpStatus.OK);
   }
 
   @GetMapping("/send-email")

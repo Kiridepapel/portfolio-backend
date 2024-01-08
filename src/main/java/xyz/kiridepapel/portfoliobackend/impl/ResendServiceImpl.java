@@ -32,6 +32,7 @@ public class ResendServiceImpl {
     @Autowired
     private LogEmailRepository logEmailRepository;
 
+    private int maxEmailsPerDay = 2;
     private String mainEmailFrom = "portfolio@monalek.xyz";
     private List<String> mainEmailTo = List.of("brian.uceda@hotmail.com", "monalek22@gmail.com");
 
@@ -79,7 +80,7 @@ public class ResendServiceImpl {
             emailsTo.add(rq.getEmail());
         }
 
-        Timestamp now = new Timestamp(System.currentTimeMillis());
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now().minusHours(5));
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         return CreateEmailOptions.builder()
@@ -102,13 +103,13 @@ public class ResendServiceImpl {
             .build();
     }
 
-    private boolean canSendMoreMails(String ip) {
+    public boolean canSendMoreMails(String ip) {
         Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
         Long quantity = logEmailRepository.countEmailsByIpBetweenDates(ip, yesterday, now);
 
-        return !(quantity >= 2);
+        return !(quantity >= maxEmailsPerDay);
     }
 
     private void saveLogEmail(ResendRequestDTO rq, String ip, String id) {
@@ -117,7 +118,7 @@ public class ResendServiceImpl {
             .email(rq.getEmail())
             .body(rq.getBody())
             .sendMeCopy(rq.getSendMeCopy())
-            .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+            .createdAt(Timestamp.valueOf(LocalDateTime.now().minusHours(5)))
             .responseId(id)
             .ip(ip)
             .build();
