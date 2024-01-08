@@ -1,3 +1,5 @@
+APP_PRODUCTION: true
+
 spring:
   datasource:
     url: jdbc:postgresql://postgresdb:5432/${POSTGRES_DB}

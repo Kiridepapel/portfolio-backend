@@ -29,10 +29,14 @@ public class ResendServiceImpl {
     @Value("${RESEND_SECRET_KEY}")
     private String RESEND_SECRET_KEY;
 
+    @Value("${APP_PRODUCTION}")
+    public String APP_PRODUCTION;
+
     @Autowired
     private LogEmailRepository logEmailRepository;
 
     private int maxEmailsPerDay = 2;
+    private int hoursToMinus = 5;
     private String mainEmailFrom = "portfolio@monalek.xyz";
     private List<String> mainEmailTo = List.of("brian.uceda@hotmail.com", "monalek22@gmail.com");
 
@@ -80,7 +84,11 @@ public class ResendServiceImpl {
             emailsTo.add(rq.getEmail());
         }
 
-        Timestamp now = Timestamp.valueOf(LocalDateTime.now().minusHours(5));
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now().minusHours(this.hoursToMinus));
+        if (this.APP_PRODUCTION.equals("false")) {
+            now = Timestamp.valueOf(LocalDateTime.now());
+        }
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         return CreateEmailOptions.builder()
@@ -103,9 +111,14 @@ public class ResendServiceImpl {
             .build();
     }
 
-    public boolean canSendMoreMails(String ip) {
-        Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
-        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+    private boolean canSendMoreMails(String ip) {
+        Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1).minusHours(this.hoursToMinus));
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now().minusHours(this.hoursToMinus));
+
+        if (this.APP_PRODUCTION.equals("false")) {
+            yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+            now = Timestamp.valueOf(LocalDateTime.now());
+        }
 
         Long quantity = logEmailRepository.countEmailsByIpBetweenDates(ip, yesterday, now);
 
@@ -113,12 +126,18 @@ public class ResendServiceImpl {
     }
 
     private void saveLogEmail(ResendRequestDTO rq, String ip, String id) {
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now().minusHours(this.hoursToMinus));
+
+        if (this.APP_PRODUCTION.equals("false")) {
+            now = Timestamp.valueOf(LocalDateTime.now());
+        }
+
         LogEmailEntity logEmailEntity = LogEmailEntity.builder()
             .title(rq.getTitle())
             .email(rq.getEmail())
             .body(rq.getBody())
             .sendMeCopy(rq.getSendMeCopy())
-            .createdAt(Timestamp.valueOf(LocalDateTime.now().minusHours(5)))
+            .createdAt(now)
             .responseId(id)
             .ip(ip)
             .build();

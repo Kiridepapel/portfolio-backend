@@ -26,10 +26,7 @@ public class UserController {
 
   @GetMapping("/test")
   public ResponseEntity<ResponseDTO> test() {
-      Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
-      Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-      return new ResponseEntity<ResponseDTO>(new ResponseDTO("Can send more emails: " + resendServiceImpl.canSendMoreMails(resendServiceImpl.getClientIp()) +
-      " (yesterday: " + yesterday + ", now: " + now + ")", 200), HttpStatus.OK);
+      return new ResponseEntity<ResponseDTO>(new ResponseDTO("Production: " + resendServiceImpl.APP_PRODUCTION, 200), HttpStatus.OK);
   }
 
   @GetMapping("/send-email")
