@@ -32,30 +32,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(request -> {
-                    CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(Arrays.asList(ALLOWED_ORIGINS));
-                    configuration.setAllowedMethods(Arrays.asList(
-                        HttpMethod.GET.name(),
-                        HttpMethod.POST.name(),
-                        HttpMethod.PUT.name(),
-                        HttpMethod.DELETE.name(),
-                        HttpMethod.PATCH.name(),
-                        HttpMethod.OPTIONS.name()));
-                    configuration.setAllowedHeaders(Arrays.asList("*"));
-                    return configuration;
-                }))
-                .authorizeHttpRequests(authRequest -> {
-                    authRequest.requestMatchers("/api/v1/auth/**").permitAll();
-                    authRequest.requestMatchers("/favicon.ico").permitAll();
-                    authRequest.anyRequest().authenticated();
-                })
-                .authenticationProvider(authProvider)
-                .addFilterBefore(
-                    jwtAuthenticationFilter,
-                    UsernamePasswordAuthenticationFilter.class
-                ).build();
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(request -> {
+                CorsConfiguration configuration = new CorsConfiguration();
+                configuration.setAllowedOrigins(Arrays.asList(ALLOWED_ORIGINS));
+                configuration.setAllowedMethods(Arrays.asList(
+                    HttpMethod.GET.name(),
+                    HttpMethod.POST.name(),
+                    HttpMethod.PUT.name(),
+                    HttpMethod.DELETE.name(),
+                    HttpMethod.PATCH.name(),
+                    HttpMethod.OPTIONS.name()));
+                configuration.setAllowedHeaders(Arrays.asList("*"));
+                return configuration;
+            }))
+            .authorizeHttpRequests(authRequest -> {
+                authRequest.requestMatchers("/api/v1/**").permitAll();
+                authRequest.requestMatchers("/favicon.ico").permitAll();
+                authRequest.anyRequest().authenticated();
+            })
+            .authenticationProvider(authProvider)
+            .addFilterBefore(
+                jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter.class
+            ).build();
     }
 
     @Bean

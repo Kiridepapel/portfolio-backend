@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import xyz.kiridepapel.portfoliobackend.dto.ResponseDTO;
 import xyz.kiridepapel.portfoliobackend.exception.JwtExceptions.*;
+import xyz.kiridepapel.portfoliobackend.exception.ResendExceptions.FailSendEmail;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -62,6 +63,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDTO> handleUsernameNotFoundException(UsernameNotFoundException ex) {
         ResponseDTO response = new ResponseDTO(
             ex.getMessage(), 401);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+    }
+
+    // Resend Exceptions
+    
+    @ExceptionHandler(FailSendEmail.class)
+    public ResponseEntity<ResponseDTO> handleFailSendEmail(FailSendEmail ex) {
+        ResponseDTO response = new ResponseDTO(
+            ex.getMessage(), 422);
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
     }
 }

@@ -8,3 +8,6 @@
 #### JWT
 * export JWT_SECRET_KEY=jwt_secret_key
 * export JWT_TIME_EXPIRATION=jwt_expiration_time
+
+#### Resend
+* export RESEND_SECRET_KEY=resend_secret_key

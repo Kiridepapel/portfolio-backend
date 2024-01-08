@@ -7,9 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import xyz.kiridepapel.portfoliobackend.dto.AuthResponseDTO;
-import xyz.kiridepapel.portfoliobackend.dto.LoginRequestDTO;
-import xyz.kiridepapel.portfoliobackend.dto.RegisterRequestDTO;
+import xyz.kiridepapel.portfoliobackend.dto.AuthDTO.AuthResponseDTO;
+import xyz.kiridepapel.portfoliobackend.dto.AuthDTO.LoginRequestDTO;
+import xyz.kiridepapel.portfoliobackend.dto.AuthDTO.RegisterRequestDTO;
+
 import xyz.kiridepapel.portfoliobackend.entity.UserEntity;
 import xyz.kiridepapel.portfoliobackend.entity.enums.RoleEnum;
 import xyz.kiridepapel.portfoliobackend.repository.UserRepository;
@@ -41,7 +42,7 @@ public class AuthServiceImpl {
             .username(request.getUsername())
             .password(passwordEncoder.encode(request.getPassword()))
             .img(request.getImg())
-            .role(RoleEnum.ROLE_ADMIN)
+            .role(RoleEnum.ROLE_USER)
             .build();
         userRepository.save(user);
         return AuthResponseDTO.builder()
