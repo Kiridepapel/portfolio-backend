@@ -1,7 +1,6 @@
 package xyz.kiridepapel.portfoliobackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -23,12 +22,9 @@ public class UserController {
   @Autowired
   private ResendServiceImpl resendServiceImpl;
 
-  @Value("${RESEND_SECRET_KEY}")
-  private String RESEND_SECRET_KEY;
-
   @GetMapping("/test")
   public ResponseEntity<ResponseDTO> test() {
-    return new ResponseEntity<ResponseDTO>(new ResponseDTO("Hello World!" + RESEND_SECRET_KEY, 200), HttpStatus.OK);
+    return new ResponseEntity<ResponseDTO>(new ResponseDTO("Hello World!", 200), HttpStatus.OK);
   }
 
   @PostMapping("/send-email")
