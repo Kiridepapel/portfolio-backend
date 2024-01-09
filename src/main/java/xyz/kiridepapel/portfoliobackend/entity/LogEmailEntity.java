@@ -20,6 +20,7 @@ public class LogEmailEntity {
     private String email;
     private String message;
     private Boolean sendMeCopy;
+    
     private Timestamp createdAt;
     private String responseId;
 

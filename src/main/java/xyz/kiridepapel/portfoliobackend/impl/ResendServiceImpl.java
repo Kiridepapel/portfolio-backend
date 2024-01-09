@@ -47,7 +47,7 @@ public class ResendServiceImpl {
         validateData(rq);
 
         if(!canSendMoreMails(ip)) {
-            throw new FailSendEmail("You can't send more than 2 emails per day!");
+            throw new FailSendEmail("No puedes enviar más emails por hoy!");
         };
 
         CreateEmailOptions params = createEmail(rq);
@@ -55,25 +55,25 @@ public class ResendServiceImpl {
         try {
             CreateEmailResponse data = resend.emails().send(params);
             saveLogEmail(rq, ip, data.getId());
-            return new ResponseDTO("Email sent successfully!", 200);
+            return new ResponseDTO("Email enviado correctamente!", 200);
         } catch (ResendException e) {
             e.printStackTrace();
-            throw new FailSendEmail("Error sending email: " + e.getMessage());
+            throw new FailSendEmail("Ocurrió un error al enviar el email!");
         }
     }
 
     private void validateData(ResendRequestDTO rq) {
         if (rq.getTitle() == null || rq.getTitle().isEmpty()) {
-            throw new FailSendEmail("Title is required!");
+            throw new FailSendEmail("El título es obligatorio!");
         }
         if (rq.getEmail() == null || rq.getEmail().isEmpty()) {
-            throw new FailSendEmail("Email is required!");
+            throw new FailSendEmail("El email es obligatorio!");
         }
         if (rq.getMessage() == null || rq.getMessage().isEmpty()) {
-            throw new FailSendEmail("Body is required!");
+            throw new FailSendEmail("Debes escribir un mensaje!");
         }
         if (rq.getSendMeCopy() == null) {
-            throw new FailSendEmail("You need to specificate if you can send a copy to you!");
+            throw new FailSendEmail("Debes indicar si quieres recibir una copia del correo!");
         }
     }
 
@@ -96,11 +96,11 @@ public class ResendServiceImpl {
             .from(mainEmailFrom)
             .subject("Portfolio - " + rq.getTitle())
             .html(
-                "<div style='padding: 10px; background: #ebebeb; border-radius: 10px; margin-bottom: 12px;'>" +
-                    "<p style='color: #6200ff; font-size: 14px; width: 50%; display: inline-block; text-align: center;'>Email: " +
+                "<div style='padding: 10px; background: #ebebeb; border-radius: 10px; margin-bottom: 12px; display: flex; flex-wrap: wrap'>" +
+                    "<p style='color: #6200ff; font-size: 14px; width: 50%; text-align: center;'>Email: " +
                         "<span style='color: #343434'>" + rq.getEmail() + "</span>" +
                     "</p>" +
-                    "<p style='color: #6200ff; font-size: 14px; width: 50%; display: inline-block; text-align: center;'>Date: " +
+                    "<p style='color: #6200ff; font-size: 14px; width: 50%; text-align: center;'>Date: " +
                         "<span style='color: #343434'>" + dateFormat.format(now) + "</span>" +
                     "</p>" +
                 "</div>" +
