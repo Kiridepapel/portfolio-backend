@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@CrossOrigin(origins = { "https://kiridepapel.vercel.app", "http://localhost:4200" })
+@CrossOrigin(origins = { "https://kiridepapel.vercel.app", "http://localhost:4200" }, allowedHeaders = "**")
 public class AuthController {
     @Autowired
     private AuthServiceImpl authServiceImpl;

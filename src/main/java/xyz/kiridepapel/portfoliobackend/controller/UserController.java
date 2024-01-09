@@ -17,7 +17,7 @@ import xyz.kiridepapel.portfoliobackend.impl.ResendServiceImpl;
 
 @RestController
 @RequestMapping("/api/v1")
-@CrossOrigin(origins = { "https://kiridepapel.vercel.app", "http://localhost:4200" })
+@CrossOrigin(origins = { "https://kiridepapel.vercel.app", "http://localhost:4200" }, allowedHeaders = "**")
 public class UserController {
   @Autowired
   private ResendServiceImpl resendServiceImpl;
