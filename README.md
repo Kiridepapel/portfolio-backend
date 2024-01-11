@@ -1,13 +1,11 @@
-## Comandos en Ubuntu
-### Variables de entorno
 #### Database
-* export POSTGRES_USER=user
-* export POSTGRES_PASSWORD=password
-* export POSTGRES_DB=db_name
+* export POSTGRES_USER=data
+* export POSTGRES_PASSWORD=data
+* export POSTGRES_DB=data
 
 #### JWT
-* export JWT_SECRET_KEY=jwt_secret_key
-* export JWT_TIME_EXPIRATION=jwt_expiration_time
+* export JWT_SECRET_KEY=data
+* export JWT_TIME_EXPIRATION=data
 
 #### Resend
-* export RESEND_SECRET_KEY=resend_secret_key
+* export RESEND_SECRET_KEY=data
